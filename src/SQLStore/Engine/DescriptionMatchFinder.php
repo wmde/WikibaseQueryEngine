@@ -93,7 +93,7 @@ class DescriptionMatchFinder {
 
 		foreach ( $selectionResult as $resultRow ) {
 			// TODO: handle parse exception
-			$entityIds[] = $this->idParser->parse( $resultRow->subject_id );
+			$entityIds[] = $this->idParser->parse( $resultRow['subject_id'] );
 		}
 
 		return $entityIds;
