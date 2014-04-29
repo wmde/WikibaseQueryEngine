@@ -30,7 +30,7 @@ class IriHandlerTest extends DataValueHandlerTest {
 	protected function getInstances() {
 		$instances = array();
 
-		$instances[] = new IriHandler();
+		$instances[] = new IriHandler( 'kittens' );
 
 		return $instances;
 	}
