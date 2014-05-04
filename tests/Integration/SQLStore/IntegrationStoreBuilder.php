@@ -2,16 +2,16 @@
 
 namespace Wikibase\QueryEngine\Tests\Integration\SQLStore;
 
-use PDO;
+use Doctrine\DBAL\Configuration;
+use Doctrine\DBAL\DriverManager;
 use PHPUnit_Framework_TestCase;
-use Wikibase\Database\MySQL\MySQLTableDefinitionReader;
-use Wikibase\Database\PDO\PDOFactory;
-use Wikibase\Database\PrefixingTableNameFormatter;
-use Wikibase\Database\QueryInterface\QueryInterface;
+use Wikibase\DataModel\Entity\BasicEntityIdParser;
+use Wikibase\QueryEngine\SQLStore\DataValueHandlers;
 use Wikibase\QueryEngine\SQLStore\DVHandler\NumberHandler;
 use Wikibase\QueryEngine\SQLStore\SQLStore;
 use Wikibase\QueryEngine\SQLStore\SQLStoreWithDependencies;
 use Wikibase\QueryEngine\SQLStore\StoreConfig;
+use Wikibase\QueryEngine\SQLStore\StoreSchema;
 
 /**
  * @licence GNU GPL v2+
@@ -38,46 +38,33 @@ class IntegrationStoreBuilder {
 	}
 
 	private function buildStore() {
-		$factory = new PDOFactory( $this->newPDO() );
-		$tableBuilder = $factory->newMySQLTableBuilder( self::DB_NAME );
-		$queryInterface = $factory->newMySQLQueryInterface();
+		$handlers = new DataValueHandlers();
+		$handlers->addMainSnakHandler( 'number', new NumberHandler( 'qr_snak_' ) );
+		$handlers->addQualifierHandler( 'number', new NumberHandler( 'qr_qualifier_' ) );
 
 		return new SQLStoreWithDependencies(
-			new SQLStore( $this->newStoreConfig() ),
-			$queryInterface,
-			$tableBuilder,
-			$this->newTableDefinitionReader( $queryInterface ),
-			$factory->newMySQLSchemaModifier()
+			new SQLStore(
+				new StoreSchema(
+					'qr_',
+					$handlers
+				),
+				new StoreConfig( 'QueryEngine integration test store' )
+			),
+			$this->newConnection(),
+			$this->newDataValueTypeLookupStub(),
+			new BasicEntityIdParser()
 		);
 	}
 
-	private function newPDO() {
-		try {
-			return new PDO(
-				'mysql:dbname=' . self::DB_NAME . ';host=localhost',
-				'qengine_tester',
-				'mysql_is_evil'
-			);
-		}
-		catch ( \PDOException $ex ) {
-			$this->testCase->markTestSkipped(
-				'Test not run, presumably the database is not set up: ' . $ex->getMessage()
-			);
-		}
-	}
+	private function newConnection() {
+		$config = new Configuration();
 
-	private function newStoreConfig() {
-		$config = new StoreConfig(
-			'QueryR Replicator QueryEngine',
-			'qr_',
-			array(
-				'number' => new NumberHandler()
-			)
+		$connectionParams = array(
+			'driver' => 'pdo_sqlite',
+			'memory' => true,
 		);
 
-		$config->setPropertyDataValueTypeLookup( $this->newDataValueTypeLookupStub() );
-
-		return $config;
+		return DriverManager::getConnection( $connectionParams, $config );
 	}
 
 	private function newDataValueTypeLookupStub() {
@@ -88,13 +75,6 @@ class IntegrationStoreBuilder {
 			->will( $this->testCase->returnValue( 'number' ) );
 
 		return $propertyDvTypeLookup;
-	}
-
-	private function newTableDefinitionReader( QueryInterface $queryInterface ) {
-		return new MySQLTableDefinitionReader(
-			$queryInterface,
-			new PrefixingTableNameFormatter( 'prefix_' )
-		);
 	}
 
 }
