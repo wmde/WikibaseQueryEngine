@@ -13,7 +13,7 @@
          verbose="true">
     <testsuites>
         <testsuite name="QueryEngineUnit">
-            <directory>tests/Phpunit</directory>
+            <directory>tests/phpunit</directory>
         </testsuite>
         <testsuite name="QueryEngineIntegration">
             <directory>tests/Integration</directory>
