@@ -4,6 +4,7 @@ namespace Wikibase\QueryEngine\SQLStore\DVHandler;
 
 use Ask\Language\Description\ValueDescription;
 use DataValues\DataValue;
+use DataValues\GlobeCoordinateValue;
 use DataValues\GlobeMath;
 use DataValues\LatLongValue;
 use Doctrine\DBAL\Query\QueryBuilder;
@@ -87,10 +88,12 @@ class LatLongHandler extends DataValueHandler {
 	 * @throws InvalidArgumentException
 	 */
 	public function getInsertValues( DataValue $value ) {
-		if ( $value instanceof LatLongValue ) {
+		if ( $value instanceof GlobeCoordinateValue ) {
+			$normalized = $this->math->normalizeGlobeCoordinate( $value )->getLatLong();
+		} elseif ( $value instanceof LatLongValue ) {
 			$normalized = $this->math->normalizeLatLong( $value, self::MINIMUM_LONGITUDE );
 		} else {
-			throw new InvalidArgumentException( 'Value is not a LatLongValue.' );
+			throw new InvalidArgumentException( 'Value is not or does not contain a LatLongValue.' );
 		}
 
 		$values = array(
@@ -116,11 +119,14 @@ class LatLongHandler extends DataValueHandler {
 	public function addMatchConditions( QueryBuilder $builder, ValueDescription $description ) {
 		$value = $description->getValue();
 
-		if ( $value instanceof LatLongValue ) {
+		if ( $value instanceof GlobeCoordinateValue ) {
+			$epsilon = abs( $value->getPrecision() );
+			$value = $this->math->normalizeGlobeCoordinate( $value )->getLatitude();
+		} elseif ( $value instanceof LatLongValue ) {
 			$epsilon = self::EPSILON;
 			$value = $this->math->normalizeLatLong( $value, self::MINIMUM_LONGITUDE );
 		} else {
-			throw new InvalidArgumentException( 'Value is not a LatLongValue.' );
+			throw new InvalidArgumentException( 'Value is not or does not contain a LatLongValue.' );
 		}
 
 		if ( $description->getComparator() === ValueDescription::COMP_EQUAL ) {
