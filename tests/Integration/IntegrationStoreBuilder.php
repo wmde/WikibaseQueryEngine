@@ -63,11 +63,18 @@ class IntegrationStoreBuilder {
 	 * @return PropertyDataValueTypeLookup
 	 */
 	private function getPropertyDataValueTypeLookup() {
-		$propertyDvTypeLookup = $this->testCase->getMock( 'Wikibase\QueryEngine\PropertyDataValueTypeLookup' );
+		$testCase = $this->testCase;
+		$propertyDvTypeLookup = $testCase->getMock( 'Wikibase\QueryEngine\PropertyDataValueTypeLookup' );
 
-		$propertyDvTypeLookup->expects( $this->testCase->any() )
+		$propertyDvTypeLookup->expects( $testCase->any() )
 			->method( 'getDataValueTypeForProperty' )
-			->will( $this->testCase->returnValue( 'number' ) );
+			->will( $testCase->returnCallback( function() use ( $testCase ) {
+				if ( method_exists( $testCase, 'getDataValueType' ) ) {
+					return call_user_func( array( $testCase, 'getDataValueType' ) );
+				}
+
+				return 'number';
+			} ) );
 
 		return $propertyDvTypeLookup;
 	}
