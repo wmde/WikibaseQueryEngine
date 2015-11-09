@@ -1,3 +1,5 @@
+WMDE has stopped development of this component. A fork with further development work done on it can be found at [jeroen/query-engine](https://github.com/JeroenDeDauw/WikibaseQueryEngine).
+
 # Wikibase QueryEngine
 
 [![Build Status](https://secure.travis-ci.org/wmde/WikibaseQueryEngine.png?branch=master)](http://travis-ci.org/wmde/WikibaseQueryEngine)
