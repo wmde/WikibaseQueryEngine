@@ -70,20 +70,13 @@ abstract class DataValueHandlerTest extends \PHPUnit_Framework_TestCase {
 		);
 	}
 
-	private function assertIsValidDatabaseIdentifier( $identifier ) {
-		$this->assertInternalType( 'string', $identifier );
-		$this->assertNotEmpty( $identifier );
-		$this->assertLessThanOrEqual( 255, strlen( $identifier ) );
-		$this->assertRegExp( '/^\w+$/', $identifier );
-	}
-
 	/**
 	 * @dataProvider instanceProvider
 	 */
 	public function testGetTableName( DataValueHandler $dvHandler ) {
 		$tableName = $dvHandler->getTableName();
 
-		$this->assertIsValidDatabaseIdentifier( $tableName );
+		$this->assertIsValidIdentifier( $tableName );
 	}
 
 	/**
@@ -155,7 +148,7 @@ abstract class DataValueHandlerTest extends \PHPUnit_Framework_TestCase {
 	public function testGetEqualityFieldNameReturnValue( DataValueHandler $dvHandler ) {
 		$equalityFieldName = $dvHandler->getEqualityFieldName();
 
-		$this->assertIsValidDatabaseIdentifier( $equalityFieldName );
+		$this->assertIsValidIdentifier( $equalityFieldName );
 		$this->assertTrue(
 			$this->handlerTableHasColumn( $dvHandler, $equalityFieldName ),
 			'The equality field is present in the table'
@@ -253,6 +246,13 @@ abstract class DataValueHandlerTest extends \PHPUnit_Framework_TestCase {
 
 		$description = new ValueDescription( $value, ValueDescription::COMP_EQUAL );
 		$dvHandler->addMatchConditions( $builder, $description );
+	}
+
+	private function assertIsValidIdentifier( $identifier ) {
+		$this->assertInternalType( 'string', $identifier );
+		$this->assertNotEmpty( $identifier );
+		$this->assertLessThanOrEqual( 255, strlen( $identifier ) );
+		$this->assertRegExp( '/^\w+$/', $identifier );
 	}
 
 }
