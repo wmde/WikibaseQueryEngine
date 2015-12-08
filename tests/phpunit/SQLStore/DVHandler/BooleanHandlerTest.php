@@ -1,0 +1,48 @@
+<?php
+
+namespace Tests\Wikibase\QueryEngine\SQLStore\DVHandler;
+
+use DataValues\BooleanValue;
+use Wikibase\QueryEngine\SQLStore\DataValueHandler;
+use Wikibase\QueryEngine\SQLStore\DVHandler\BooleanHandler;
+use Tests\Wikibase\QueryEngine\SQLStore\DataValueHandlerTest;
+
+/**
+ * @covers Wikibase\QueryEngine\SQLStore\DVHandler\BooleanHandler
+ *
+ * @group Wikibase
+ * @group WikibaseQueryEngine
+ *
+ * @licence GNU GPL v2+
+ * @author Jeroen De Dauw < jeroendedauw@gmail.com >
+ */
+class BooleanHandlerTest extends DataValueHandlerTest {
+
+	/**
+	 * @see DataValueHandlerTest::getInstances
+	 *
+	 * @return DataValueHandler[]
+	 */
+	protected function getInstances() {
+		$instances = array();
+
+		$instances[] = new BooleanHandler();
+
+		return $instances;
+	}
+
+	/**
+	 * @see DataValueHandlerTest::getValues
+	 *
+	 * @return BooleanValue[]
+	 */
+	protected function getValues() {
+		$values = array();
+
+		$values[] = new BooleanValue( true );
+		$values[] = new BooleanValue( false );
+
+		return $values;
+	}
+
+}
