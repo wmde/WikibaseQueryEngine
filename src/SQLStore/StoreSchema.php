@@ -79,12 +79,6 @@ class StoreSchema {
 		$this->addCommonColumnsToTable( $table );
 		$this->addCommonIndexesToTable( $table );
 
-		$table->addUniqueIndex( array(
-			$handler->getEqualityFieldName(),
-			'property_id',
-			'subject_id',
-		) );
-
 		return $table;
 	}
 
