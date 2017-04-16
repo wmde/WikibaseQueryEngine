@@ -32,6 +32,7 @@ script:
   - phpunit -c tests/travis/$DB.travis.xml
 
 notifications:
+  email: false
   irc:
     channels:
       - "chat.freenode.net#wikidata-feed"
