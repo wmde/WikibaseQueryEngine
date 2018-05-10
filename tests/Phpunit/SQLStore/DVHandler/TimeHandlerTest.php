@@ -15,7 +15,7 @@ use Wikibase\QueryEngine\Tests\Phpunit\SQLStore\DataValueHandlerTest;
  *
  * @licence GNU GPL v2+
  * @author Adam Shorland
- * @author Thiemo Mättig
+ * @author Thiemo Kreuz
  */
 class TimeHandlerTest extends DataValueHandlerTest {
 

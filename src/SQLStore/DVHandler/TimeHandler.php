@@ -18,7 +18,7 @@ use Wikibase\QueryEngine\SQLStore\DataValueHandler;
  *
  * @licence GNU GPL v2+
  * @author Adam Shorland < jeroendedauw@gmail.com >
- * @author Thiemo Mättig
+ * @author Thiemo Kreuz
  */
 class TimeHandler extends DataValueHandler {
 

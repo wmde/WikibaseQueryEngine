@@ -16,7 +16,7 @@ use Wikibase\QueryEngine\Tests\Phpunit\SQLStore\DataValueHandlerTest;
  * @group WikibaseQueryEngine
  *
  * @licence GNU GPL v2+
- * @author Thiemo Mättig
+ * @author Thiemo Kreuz
  */
 class QuantityHandlerTest extends DataValueHandlerTest {
 

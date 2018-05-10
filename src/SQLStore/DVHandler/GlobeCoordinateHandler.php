@@ -17,7 +17,7 @@ use Wikibase\QueryEngine\SQLStore\DataValueHandler;
  * @since 0.3
  *
  * @licence GNU GPL v2+
- * @author Thiemo Mättig
+ * @author Thiemo Kreuz
  */
 class GlobeCoordinateHandler extends DataValueHandler {
 
